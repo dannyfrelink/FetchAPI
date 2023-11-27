@@ -3,6 +3,9 @@ const fetch = require("node-fetch");
 require("dotenv").config();
 const app = express();
 const port = 3001;
+const cors = require("cors");
+
+app.use(cors());
 
 app.get("/weather/:region", async (req, res) => {
   try {
@@ -12,8 +15,6 @@ app.get("/weather/:region", async (req, res) => {
     const forecastWeather = await fetch(
       `http://api.weatherapi.com/v1/forecast.json?key=${key}&q=${region}&days=7`
     ).then((res) => res.json());
-
-    console.log("forecast: ", forecastWeather);
 
     res.status(200).json({ forecastWeather });
   } catch (error) {
