@@ -9,13 +9,13 @@ app.get("/weather/:region", async (req, res) => {
     const { region } = req.params;
     const key = process.env.API_KEY;
 
-    await fetch(
-      `http://api.weatherapi.com/v1/current.json?key=${key}&q=${region}`
-    )
-      .then((res) => res.json())
-      .then((data) => console.log("testing: ", data));
+    const forecastWeather = await fetch(
+      `http://api.weatherapi.com/v1/forecast.json?key=${key}&q=${region}&days=7`
+    ).then((res) => res.json());
 
-    res.send(`Hello from NodeJS server: ${region}`);
+    console.log("forecast: ", forecastWeather);
+
+    res.status(200).json({ forecastWeather });
   } catch (error) {
     console.error("Error fetching weather data:", error);
     res.status(500).json({ error: "Internal Server Error" });
