@@ -14,17 +14,6 @@ const InputAutocomplete = () => {
     };
   };
 
-  const capitalizeFirstLetter = (input) => {
-    return input
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
-
-  const handleInputChange = (event) => {
-    setQuery(capitalizeFirstLetter(event.target.value));
-  };
-
   const handleSearch = debounce(async (input) => {
     try {
       await fetch(`http://localhost:3001/suggestions?input=${input}`, {
@@ -40,8 +29,11 @@ const InputAutocomplete = () => {
     }
   }, 500);
 
-  const delayedSearch = () => {
-    handleSearch(query);
+  const capitalizeFirstLetter = (input) => {
+    return input
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   return (
@@ -51,8 +43,8 @@ const InputAutocomplete = () => {
         type="text"
         placeholder="Type a city name..."
         value={query}
-        onChange={handleInputChange}
-        onKeyUp={delayedSearch}
+        onChange={(e) => setQuery(capitalizeFirstLetter(e.target.value))}
+        onKeyUp={() => handleSearch(query)}
         onKeyDown={() => clearTimeout(timeoutId)}
       />
       <ul>
