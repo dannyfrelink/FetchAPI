@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 const InputAutocomplete = () => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  let timeoutId;
 
   const debounce = (func, delay) => {
-    let timeoutId;
     return function () {
       const context = this;
       const args = arguments;
@@ -14,21 +14,25 @@ const InputAutocomplete = () => {
     };
   };
 
+  const capitalizeFirstLetter = (input) => {
+    return input
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   const handleInputChange = (event) => {
-    setQuery(event.target.value);
+    setQuery(capitalizeFirstLetter(event.target.value));
   };
 
   const handleSearch = debounce(async (input) => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/suggestions?input=${query}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      await fetch(`http://localhost:3001/suggestions?input=${input}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
         .then((res) => res.json())
         .then(({ suggestions }) => setSuggestions(suggestions));
     } catch (error) {
@@ -43,12 +47,13 @@ const InputAutocomplete = () => {
   return (
     <div>
       <input
-        className="block border-[1px] border-black border-solid rounded p-1"
+        className="block w-full border-[1px] border-black border-solid rounded p-1"
         type="text"
         placeholder="Type a city name..."
         value={query}
         onChange={handleInputChange}
         onKeyUp={delayedSearch}
+        onKeyDown={() => clearTimeout(timeoutId)}
       />
       <ul>
         {suggestions.map((city) => (
