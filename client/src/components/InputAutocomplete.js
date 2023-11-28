@@ -1,7 +1,9 @@
+import { Autocomplete, TextField } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 const InputAutocomplete = () => {
   const [query, setQuery] = useState("");
+  const [status, setStatus] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   let timeoutId;
 
@@ -36,9 +38,13 @@ const InputAutocomplete = () => {
       .join(" ");
   };
 
+  useEffect(() => {
+    setStatus(!status);
+  }, [suggestions]);
+
   return (
     <div>
-      <input
+      {/* <input
         className="block w-full border-[1px] border-black border-solid rounded p-1"
         type="text"
         placeholder="Type a city name..."
@@ -46,12 +52,26 @@ const InputAutocomplete = () => {
         onChange={(e) => setQuery(capitalizeFirstLetter(e.target.value))}
         onKeyUp={() => handleSearch(query)}
         onKeyDown={() => clearTimeout(timeoutId)}
+      /> */}
+      <Autocomplete
+        value={query}
+        disablePortal
+        id="combo-box-demo"
+        options={suggestions}
+        sx={{ width: 300 }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            onChange={(e) => setQuery(capitalizeFirstLetter(e.target.value))}
+            onKeyUp={() => handleSearch(query)}
+            onKeyDown={() => clearTimeout(timeoutId)}
+            label="Type a city name"
+          />
+        )}
       />
       <ul>
         {suggestions.map((city) => (
-          <li key={city.geonameId}>
-            {city.toponymName}, {city.countryName}
-          </li>
+          <li key={city.id}>{city.label}</li>
         ))}
       </ul>
     </div>

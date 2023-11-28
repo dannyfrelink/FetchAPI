@@ -16,16 +16,33 @@ app.get("/suggestions", async (req, res) => {
     )
       .then((res) => res.json())
       .then(({ geonames }) => {
-        const filteredGeonames = geonames
-          .filter(
-            (geoname) =>
-              !/\d/.test(geoname.toponymName) &&
-              geoname.toponymName.charAt(0).toLowerCase() ===
-                input.charAt(0).toLowerCase()
-          )
-          .splice(0, 10);
+        const filteredGeonames = geonames.filter(
+          (geoname) =>
+            !/\d/.test(geoname.toponymName) &&
+            geoname.toponymName.charAt(0).toLowerCase() ===
+              input.charAt(0).toLowerCase()
+        );
 
-        res.json({ suggestions: filteredGeonames });
+        const typedGeonames = filteredGeonames.map((geoname) => {
+          return {
+            label: `${geoname.toponymName}, ${geoname.adminName1} (${geoname.countryName})`,
+            id: geoname.geonameId,
+          };
+        });
+
+        let reducedGeonames = [];
+        let uniqueObject = {};
+
+        for (let i in typedGeonames) {
+          let objTitle = typedGeonames[i]["label"];
+          uniqueObject[objTitle] = typedGeonames[i];
+        }
+
+        for (i in uniqueObject) {
+          reducedGeonames.push(uniqueObject[i]);
+        }
+
+        res.json({ suggestions: reducedGeonames.splice(0, 10) });
       });
   } catch (error) {
     console.error("Error fetching weather data:", error);
