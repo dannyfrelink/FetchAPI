@@ -51,22 +51,6 @@ const InputAutocomplete = () => {
 
   return (
     <div>
-      {/* <input
-        className="block w-full border-[1px] border-black border-solid rounded p-1"
-        type="text"
-        placeholder="Type a city name..."
-        value={query}
-        onChange={(e) => setQuery(capitalizeFirstLetter(e.target.value))}
-        onKeyUp={() => handleSearch(query)}
-        onKeyDown={() => clearTimeout(timeoutId)}
-      /> */}
-      {/* <Autocomplete
-        value={query}
-        disablePortal
-        id="combo-box-demo"
-        options={suggestions}
-        sx={{ width: 300 }}
-        renderInput={(params) => ( */}
       <TextField
         className="block w-full"
         onChange={(e) => setQuery(capitalizeFirstLetter(e.target.value))}
@@ -74,8 +58,6 @@ const InputAutocomplete = () => {
         onKeyDown={() => clearTimeout(timeoutId)}
         label="Type a city name"
       />
-      {/* )} */}
-      {/* /> */}
       <List
         className="bg-yellow-500"
         component="nav"
@@ -92,16 +74,7 @@ const InputAutocomplete = () => {
             <Divider />
           </div>
         ))}
-        {/* <ListItem button>
-          <ListItemText primary="Inbox" secondary="Jan 9, 2014" />
-        </ListItem>
-        <Divider /> */}
       </List>
-      {/* <ul>
-        {suggestions.map((city) => (
-          <li key={city.id}>{city.label}</li>
-        ))}
-      </ul> */}
     </div>
   );
 };

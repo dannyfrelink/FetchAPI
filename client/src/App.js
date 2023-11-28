@@ -22,21 +22,6 @@ function App() {
   return (
     <div className="w-10/12 mx-auto mt-7">
       <InputAutocomplete />
-
-      {/* {!forecast ? (
-        <form method="GET" onSubmit={handleSubmit}>
-          <input
-            className="block border-[1px] border-black border-solid"
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-
-          <button>Search Weather</button>
-        </form>
-      ) : (
-        <div>{forecast.current.condition.text}</div>
-      )} */}
     </div>
   );
 }
