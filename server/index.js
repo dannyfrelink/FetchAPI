@@ -16,12 +16,18 @@ app.get("/suggestions", async (req, res) => {
     )
       .then((res) => res.json())
       .then(({ geonames }) => {
-        const filteredGeonames = geonames.filter(
-          (geoname) =>
-            !/\d/.test(geoname.toponymName) &&
-            geoname.toponymName.charAt(0).toLowerCase() ===
-              input.charAt(0).toLowerCase()
-        );
+        const filteredGeonames = geonames.filter((geoname) => {
+          const geoName = geoname.toponymName.toLowerCase();
+          const query = input.toLowerCase();
+
+          for (let i = 0; i < query.length; i++) {
+            // If the characters don't match, return false
+            if (geoName.charAt(i) !== query.charAt(i)) {
+              return false;
+            }
+          }
+          return true;
+        });
 
         const typedGeonames = filteredGeonames.map((geoname) => {
           return {
