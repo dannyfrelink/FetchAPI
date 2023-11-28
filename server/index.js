@@ -12,10 +12,21 @@ app.get("/suggestions", async (req, res) => {
     const { input } = req.query;
 
     await fetch(
-      `http://api.geonames.org/searchJSON?name_startsWith=${input}&username=dannyfrelink&maxRows=1000`
+      `http://api.geonames.org/searchJSON?name_startsWith=${input}&username=dannyfrelink&maxRows=100`
     )
       .then((res) => res.json())
-      .then(({ geonames }) => res.json({ suggestions: geonames }));
+      .then(({ geonames }) => {
+        const filteredGeonames = geonames
+          .filter(
+            (geoname) =>
+              !/\d/.test(geoname.toponymName) &&
+              geoname.toponymName.charAt(0).toLowerCase() ===
+                input.charAt(0).toLowerCase()
+          )
+          .splice(0, 10);
+
+        res.json({ suggestions: filteredGeonames });
+      });
   } catch (error) {
     console.error("Error fetching weather data:", error);
     res.status(500).json({ error: "Internal Server Error" });
