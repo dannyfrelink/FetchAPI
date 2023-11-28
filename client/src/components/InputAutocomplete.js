@@ -1,4 +1,11 @@
-import { Autocomplete, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  TextField,
+} from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 const InputAutocomplete = () => {
@@ -53,27 +60,48 @@ const InputAutocomplete = () => {
         onKeyUp={() => handleSearch(query)}
         onKeyDown={() => clearTimeout(timeoutId)}
       /> */}
-      <Autocomplete
+      {/* <Autocomplete
         value={query}
         disablePortal
         id="combo-box-demo"
         options={suggestions}
         sx={{ width: 300 }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            onChange={(e) => setQuery(capitalizeFirstLetter(e.target.value))}
-            onKeyUp={() => handleSearch(query)}
-            onKeyDown={() => clearTimeout(timeoutId)}
-            label="Type a city name"
-          />
-        )}
+        renderInput={(params) => ( */}
+      <TextField
+        className="block w-full"
+        onChange={(e) => setQuery(capitalizeFirstLetter(e.target.value))}
+        onKeyUp={() => handleSearch(query)}
+        onKeyDown={() => clearTimeout(timeoutId)}
+        label="Type a city name"
       />
-      <ul>
+      {/* )} */}
+      {/* /> */}
+      <List
+        className="bg-yellow-500"
+        component="nav"
+        aria-label="city suggestions"
+      >
+        {suggestions.map((city) => (
+          <div>
+            <ListItem button>
+              <ListItemText
+                primary={city.label.split(",")[0]}
+                secondary={city.label.split(", ")[1]}
+              />
+            </ListItem>
+            <Divider />
+          </div>
+        ))}
+        {/* <ListItem button>
+          <ListItemText primary="Inbox" secondary="Jan 9, 2014" />
+        </ListItem>
+        <Divider /> */}
+      </List>
+      {/* <ul>
         {suggestions.map((city) => (
           <li key={city.id}>{city.label}</li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };
