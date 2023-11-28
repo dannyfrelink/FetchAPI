@@ -14,34 +14,6 @@ const InputAutocomplete = () => {
     };
   };
 
-  //   useEffect(() => {
-  //     const fetchCities = async () => {
-  //       try {
-  //         const response = await fetch(
-  //           `http://localhost:3001/suggestions?input=${query}`,
-  //           {
-  //             method: "GET",
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //             },
-  //           }
-  //         )
-  //           .then((res) => res.json())
-  //           .then(({ suggestions }) => setSuggestions(suggestions));
-
-  //         // setSuggestions(response.data.list);
-  //       } catch (error) {
-  //         console.error("Error fetching city suggestions:", error);
-  //       }
-  //     };
-
-  //     if (query.trim() !== "") {
-  //       fetchCities();
-  //     } else {
-  //       setSuggestions([]);
-  //     }
-  //   }, [query]);
-
   const handleInputChange = (event) => {
     setQuery(event.target.value);
   };
