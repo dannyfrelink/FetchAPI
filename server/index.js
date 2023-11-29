@@ -9,19 +9,23 @@ app.use(cors());
 
 app.get("/suggestions", async (req, res) => {
   try {
-    const { input } = req.query;
+    const { input, page } = req.query;
+    const rowsPerPage = 50;
+    const startRow = (page - 1) * rowsPerPage;
 
     await fetch(
-      `http://api.geonames.org/searchJSON?name_startsWith=${input}&username=dannyfrelink&maxRows=100`
+      `http://api.geonames.org/searchJSON?name_startsWith=${input}&username=dannyfrelink&startRow=${startRow}&maxRows=${rowsPerPage}`,
+      { timeout: 50000 }
     )
       .then((res) => res.json())
       .then(({ geonames }) => {
+        const count = geonames.length === rowsPerPage;
+
         const filteredGeonames = geonames.filter((geoname) => {
           const geoName = geoname.toponymName.toLowerCase();
           const query = input.toLowerCase();
 
           for (let i = 0; i < query.length; i++) {
-            // If the characters don't match, return false
             if (geoName.charAt(i) !== query.charAt(i)) {
               return false;
             }
@@ -48,7 +52,7 @@ app.get("/suggestions", async (req, res) => {
           reducedGeonames.push(uniqueObject[i]);
         }
 
-        res.json({ suggestions: reducedGeonames.splice(0, 10) });
+        res.json({ count, suggestions: reducedGeonames.splice(0, 10) });
       });
   } catch (error) {
     console.error("Error fetching weather data:", error);

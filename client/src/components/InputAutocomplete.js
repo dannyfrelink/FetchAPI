@@ -1,14 +1,18 @@
 import {
-  Divider,
   List,
   ListItem,
   ListItemText,
+  Pagination,
   TextField,
 } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import React, { useState, useEffect } from "react";
 
 const InputAutocomplete = () => {
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(2);
+  const [nextPage, setNextPage] = useState(false);
   const [status, setStatus] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   let timeoutId;
@@ -27,14 +31,20 @@ const InputAutocomplete = () => {
       if (query === "") {
         setSuggestions([]);
       } else {
-        await fetch(`http://localhost:3001/suggestions?input=${input}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        await fetch(
+          `http://localhost:3001/suggestions?input=${input}&page=${page}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
           .then((res) => res.json())
-          .then(({ suggestions }) => setSuggestions(suggestions));
+          .then(({ count, suggestions }) => {
+            setSuggestions(suggestions);
+            setNextPage(count);
+          });
       }
     } catch (error) {
       console.error("Error fetching city suggestions:", error);
@@ -79,6 +89,13 @@ const InputAutocomplete = () => {
             </div>
           ))}
         </List>
+      )}
+      {suggestions.length > 0 && (
+        <nav className="flex justify-between w-full z-10 list-none [&>li]:flex [&>li]:items-center">
+          <li>{page !== 1 && <ArrowBackIosNewIcon fontSize="small" />}</li>
+          <li>{`${page}`}</li>
+          <li>{nextPage && <ArrowForwardIosIcon fontSize="small" />}</li>
+        </nav>
       )}
     </div>
   );
