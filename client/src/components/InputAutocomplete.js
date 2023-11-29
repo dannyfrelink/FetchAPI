@@ -1,10 +1,4 @@
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Pagination,
-  TextField,
-} from "@mui/material";
+import { List, ListItem, ListItemText, TextField } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import React, { useState, useEffect } from "react";
@@ -62,6 +56,21 @@ const InputAutocomplete = () => {
     setStatus(!status);
   }, [suggestions]);
 
+  const handlePagination = async (e) => {
+    let targetElement = e.target;
+    if (e.target.tagName !== "li") {
+      targetElement = e.target.closest("li");
+    }
+
+    if (targetElement.id === "prevPage") {
+      setPage(page - 1);
+    } else {
+      setPage(page + 1);
+    }
+
+    await handleSearch();
+  };
+
   return (
     <div className="flex flex-col h-screen pt-7">
       <TextField
@@ -91,10 +100,14 @@ const InputAutocomplete = () => {
         </List>
       )}
       {suggestions.length > 0 && (
-        <nav className="flex justify-between w-full z-10 list-none [&>li]:flex [&>li]:items-center">
-          <li>{page !== 1 && <ArrowBackIosNewIcon fontSize="small" />}</li>
+        <nav className="flex justify-between w-full z-10 list-none mb-5 [&>li]:flex [&>li]:items-center">
+          <li id="prevPage" onClick={handlePagination}>
+            {page !== 1 && <ArrowBackIosNewIcon fontSize="small" />}
+          </li>
           <li>{`${page}`}</li>
-          <li>{nextPage && <ArrowForwardIosIcon fontSize="small" />}</li>
+          <li id="nextPage" onClick={handlePagination}>
+            {nextPage && <ArrowForwardIosIcon fontSize="small" />}
+          </li>
         </nav>
       )}
     </div>
