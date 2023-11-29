@@ -20,7 +20,7 @@ function App() {
   };
 
   return (
-    <div className="w-10/12 mx-auto mt-7">
+    <div className="w-10/12 mx-auto before:absolute before:inset-0 before:bg-[#C2DEEA]">
       <InputAutocomplete />
     </div>
   );
