@@ -70,7 +70,7 @@ const InputAutocomplete = () => {
         >
           {suggestions.map((city) => (
             <div className="bg-[#00A1E4] rounded" key={city.id}>
-              <ListItem button>
+              <ListItem onClick={(e) => console.log(e.target)} button>
                 <ListItemText
                   primary={city.label.split(",")[0]}
                   secondary={city.label.split(", ")[1]}
